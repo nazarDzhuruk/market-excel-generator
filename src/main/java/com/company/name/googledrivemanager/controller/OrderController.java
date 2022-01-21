@@ -1,8 +1,10 @@
 package com.company.name.googledrivemanager.controller;
 
 import com.company.name.googledrivemanager.database.model.Order;
+import com.company.name.googledrivemanager.database.model.OrderedProduct;
 import com.company.name.googledrivemanager.database.model.Product;
 import com.company.name.googledrivemanager.database.service.OrderService;
+import com.company.name.googledrivemanager.database.service.OrderedProductService;
 import com.company.name.googledrivemanager.database.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +19,15 @@ import java.util.stream.Collectors;
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderedProductService orderedProductService;
     private final ProductService productService;
 
 
-    public OrderController(OrderService orderService, ProductService productService) {
+    public OrderController(OrderService orderService, ProductService productService,
+                           OrderedProductService orderedProductService) {
         this.orderService = orderService;
         this.productService = productService;
+        this.orderedProductService = orderedProductService;
     }
 
     @GetMapping
@@ -32,7 +37,7 @@ public class OrderController {
 
     @PostMapping("/create/")
     public void createOrder(@RequestBody @Valid Order order) {
-        System.out.println(order.getProducts().toString());
+
 //
 //        List<Product> products = order.getProducts().stream()
 //                .map(product -> productService.findByProductCode(product.getProductCode()))
@@ -44,13 +49,13 @@ public class OrderController {
 
     }
 
-    @PutMapping("/take/{orderId}/")
+    @PutMapping("/create/{orderId}/")
     public ResponseEntity<Order> addProducts(@Valid @PathVariable("orderId") Integer orderId,
-                                             @Valid @RequestBody Product product) {
-        Order order = orderService.getOrderById(orderId);
-        order.getProducts().add(product);
+                                             @Valid @RequestBody OrderedProduct orderedProduct) {
 
-        return new ResponseEntity<>(order, HttpStatus.OK);
+        orderedProductService.assignProductToOrder(orderId, orderedProduct);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
