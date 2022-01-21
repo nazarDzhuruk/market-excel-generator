@@ -29,23 +29,23 @@ public class ExcelDocument {
     }
 
     public void createDocument(String documentName, List<Order> data) {
-        XSSFWorkbook wb = new XSSFWorkbook();
-        XSSFSheet sheet = wb.createSheet(String.valueOf(LocalDate.now()));
-        int rowNum = 0;
-        for (Order order : data) {
-            for (Product product : order.getProducts()) {
-                Row row = sheet.createRow(rowNum++);
-                createCell(order, product, row);
-            }
-        }
-        try (OutputStream fileOut = new FileOutputStream(PATH + SLASH + documentName + EXTENSION)) {
-
-            wb.write(fileOut);
-            wb.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        XSSFWorkbook wb = new XSSFWorkbook();
+//        XSSFSheet sheet = wb.createSheet(String.valueOf(LocalDate.now()));
+//        int rowNum = 0;
+//        for (Order order : data) {
+//            for (Product product : order.getProducts()) {
+//                Row row = sheet.createRow(rowNum++);
+//                createCell(order, product, row);
+//            }
+//        }
+//        try (OutputStream fileOut = new FileOutputStream(PATH + SLASH + documentName + EXTENSION)) {
+//
+//            wb.write(fileOut);
+//            wb.close();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private static void createCell(Order order, Product product, Row row) {

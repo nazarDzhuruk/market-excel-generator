@@ -13,10 +13,10 @@ CREATE TABLE IF NOT EXISTS orders
     destination VARCHAR,
     payment_status BOOLEAN
 );
-CREATE TABLE IF NOT EXISTS orders_ordered_products
+CREATE TABLE IF NOT EXISTS orders_products
 (
     order_id INTEGER,
-    ordered_products_id INTEGER,
+    products_id INTEGER,
     FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE,
-    FOREIGN KEY (ordered_products_id) REFERENCES product (id) ON DELETE CASCADE
+    FOREIGN KEY (products_id) REFERENCES product (id) ON DELETE CASCADE
 );

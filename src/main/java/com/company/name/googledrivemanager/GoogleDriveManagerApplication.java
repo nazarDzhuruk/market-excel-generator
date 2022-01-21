@@ -1,7 +1,9 @@
 package com.company.name.googledrivemanager;
 
 import com.company.name.googledrivemanager.database.model.Order;
+import com.company.name.googledrivemanager.database.model.OrderedProduct;
 import com.company.name.googledrivemanager.database.model.Product;
+import com.company.name.googledrivemanager.database.repository.OrderedProductRepository;
 import com.company.name.googledrivemanager.database.service.OrderService;
 import com.company.name.googledrivemanager.database.service.ProductService;
 import com.company.name.googledrivemanager.excel.ExcelManager;
@@ -13,8 +15,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @SpringBootApplication
 public class GoogleDriveManagerApplication {
@@ -23,16 +26,19 @@ public class GoogleDriveManagerApplication {
     public static OrderService orderService;
     public static ProductService productService;
     private static MainManager mainManager;
+    private static OrderedProductRepository orderedProductRepository;
 
 
     public GoogleDriveManagerApplication(DriveManager driveManager, OrderService orderService,
                                          ProductService productService, ExcelManager excelManager,
+                                         OrderedProductRepository orderedProductRepository,
                                          MainManager mainManager) {
         this.driveManager = driveManager;
         this.orderService = orderService;
         this.productService = productService;
         this.excelManager = excelManager;
         this.mainManager = mainManager;
+        this.orderedProductRepository = orderedProductRepository;
     }
 
     public static void main(String[] args) throws IOException {
@@ -47,18 +53,19 @@ public class GoogleDriveManagerApplication {
         products.add(product2);
         products.add(product3);
         products.forEach(p -> productService.create(p));
-        List<Product> ordered = new ArrayList<>();
-        Product product4 = new Product("Name1", 1233, 50, "me");
-        ordered.add(product4);
+        OrderedProduct orderedProducts = new OrderedProduct(1, 1233, 50);
 
-        Order order = new Order(13,"Krakow", true, LocalDate.now(),   products);
+        Set<OrderedProduct> ordered = new HashSet<>();
 
+        ordered.add(orderedProducts);
+
+        Order order = new Order(13, "Krakow", true, LocalDate.now());
+
+        ordered.forEach(p -> p.getOrders().add(order));
+        orderedProductRepository.save(orderedProducts);
         orderService.createOrder(order);
 
-        orderService.getOrderById(13).getProducts().forEach(System.out::println);
         productService.storedItems().forEach(System.out::println);
-
-
-
     }
+
 }
