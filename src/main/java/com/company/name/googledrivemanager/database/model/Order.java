@@ -1,10 +1,12 @@
 package com.company.name.googledrivemanager.database.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "Order")
 @Table(name = "orders")
@@ -18,15 +20,16 @@ public class Order {
     private boolean paymentStatus;
     @Column(name = "datetime", nullable = true)
     private LocalDate date;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Product> products = new ArrayList<>();
 
-    public Order(Integer orderID, String destination, boolean paymentStatus, LocalDate date, List<Product> products) {
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "orders")
+    @JsonIgnore
+    private Set<OrderedProduct> products = new HashSet<>();
+
+    public Order(Integer orderID, String destination, boolean paymentStatus, LocalDate date) {
         this.orderID = orderID;
         this.destination = destination;
         this.paymentStatus = paymentStatus;
         this.date = date;
-        this.products = products;
     }
 
     public Order() {
@@ -64,11 +67,11 @@ public class Order {
         this.date = date;
     }
 
-    public List<Product> getProducts() {
+    public Set<OrderedProduct> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(Set<OrderedProduct> products) {
         this.products = products;
     }
 
@@ -79,7 +82,6 @@ public class Order {
                 ", destination='" + destination + '\'' +
                 ", paymentStatus=" + paymentStatus +
                 ", date=" + date +
-                ", orderedProducts=" + products +
                 '}';
     }
 }
