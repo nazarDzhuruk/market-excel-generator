@@ -27,8 +27,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void createOrder(Order order) {
-        changeQuantityOfStoredItem(order.getProducts());
         orderRepository.save(order);
+
+//        if (order.getProducts() != null) {
+//            changeQuantityOfStoredItem(order.getProducts());
+//        }
     }
 
     @Override
@@ -51,18 +54,5 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> getOrdersByDate(String date) {
         return orderRepository.findAll().stream().filter(order -> String.valueOf(order.getDate()).equals(date))
                 .collect(Collectors.toList());
-    }
-
-    private void changeQuantityOfStoredItem(List<Product> orderedItems) {
-
-        List<Product> items = orderedItems.stream()
-                .map(product -> productRepository.findById(product.getProductCode()).get())
-                .collect(Collectors.toList());
-
-        productRepository.saveAll(items);
-    }
-
-    public static void main(String[] args) {
-
     }
 }
