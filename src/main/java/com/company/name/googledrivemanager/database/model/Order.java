@@ -1,7 +1,7 @@
 package com.company.name.googledrivemanager.database.model;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -20,19 +20,18 @@ public class Order {
     private boolean paymentStatus;
     @Column(name = "datetime", nullable = true)
     private LocalDate date;
-
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "orders")
     @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "orders")
     private Set<OrderedProduct> products = new HashSet<>();
 
-    public Order(Integer orderID, String destination, boolean paymentStatus, LocalDate date) {
-        this.orderID = orderID;
-        this.destination = destination;
-        this.paymentStatus = paymentStatus;
-        this.date = date;
+    public Order(OrderBuilder orderBuilder) {
+        this.orderID = orderBuilder.id;
+        this.destination = orderBuilder.destination;
+        this.paymentStatus = orderBuilder.paymentStatus;
+        this.date = orderBuilder.date;
     }
 
-    public Order() {
+    protected Order() {
     }
 
     public Integer getOrderID() {
@@ -51,7 +50,7 @@ public class Order {
         this.destination = destination;
     }
 
-    public boolean isPaymentStatus() {
+    public boolean isPaymentStatusTrue() {
         return paymentStatus;
     }
 
@@ -83,5 +82,27 @@ public class Order {
                 ", paymentStatus=" + paymentStatus +
                 ", date=" + date +
                 '}';
+    }
+
+    public static class OrderBuilder {
+        @JsonProperty("id")
+        private Integer id;
+        @JsonProperty("destination")
+        private String destination;
+        @JsonProperty("paymentStatus")
+        private boolean paymentStatus;
+        @JsonProperty("date")
+        private LocalDate date;
+
+        public OrderBuilder(Integer id, String destination, boolean paymentStatus, LocalDate date) {
+            this.id = id;
+            this.destination = destination;
+            this.paymentStatus = paymentStatus;
+            this.date = date;
+        }
+
+        public Order build() {
+            return new Order(this);
+        }
     }
 }

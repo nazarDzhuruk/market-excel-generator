@@ -1,11 +1,8 @@
 package com.company.name.googledrivemanager.database.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-
 
 @Entity(name = "Product")
 @Table(name = "product")
@@ -20,16 +17,15 @@ public class Product implements Comparable<Product> {
     @Column(name = "quantity", nullable = false)
     private int productQuantity;
 
-    public Product(String name, Integer productCode, int productQuantity, String productDistributor) {
-        this.name = name;
-        this.productCode = productCode;
-        this.productDistributor = productDistributor;
-        this.productQuantity = productQuantity;
+    public Product(ProductBuilder productBuilder) {
+        this.name = productBuilder.name;
+        this.productCode = productBuilder.productCode;
+        this.productDistributor = productBuilder.productDistributor;
+        this.productQuantity = productBuilder.productQuantity;
     }
 
-    public Product() {
+    protected Product() {
     }
-
 
     public int getProductQuantity() {
         return productQuantity;
@@ -76,5 +72,27 @@ public class Product implements Comparable<Product> {
                 ", productDistributor='" + productDistributor + '\'' +
                 ", productQuantity=" + productQuantity +
                 '}';
+    }
+
+    public static class ProductBuilder {
+        @JsonProperty("productCode")
+        private Integer productCode;
+        @JsonProperty("name")
+        private String name;
+        @JsonProperty("productDistributor")
+        private String productDistributor;
+        @JsonProperty("productQuantity")
+        private int productQuantity;
+
+        public ProductBuilder(Integer productCode, String name, String productDistributor, int productQuantity) {
+            this.productCode = productCode;
+            this.name = name;
+            this.productDistributor = productDistributor;
+            this.productQuantity = productQuantity;
+        }
+
+        public Product build() {
+            return new Product(this);
+        }
     }
 }
