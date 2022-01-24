@@ -1,18 +1,20 @@
 package com.company.name.googledrivemanager.controller;
 
+import static com.company.name.googledrivemanager.database.model.Order.OrderBuilder;
+import static com.company.name.googledrivemanager.database.model.OrderedProduct.OrderedProductBuilder;
+
 import com.company.name.googledrivemanager.database.model.Order;
 import com.company.name.googledrivemanager.database.model.OrderedProduct;
-import com.company.name.googledrivemanager.database.model.Product;
 import com.company.name.googledrivemanager.database.service.OrderService;
 import com.company.name.googledrivemanager.database.service.OrderedProductService;
-import com.company.name.googledrivemanager.database.service.ProductService;
+import com.company.name.googledrivemanager.exception.ApiRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/order")
@@ -20,13 +22,9 @@ public class OrderController {
 
     private final OrderService orderService;
     private final OrderedProductService orderedProductService;
-    private final ProductService productService;
 
-
-    public OrderController(OrderService orderService, ProductService productService,
-                           OrderedProductService orderedProductService) {
+    public OrderController(OrderService orderService, OrderedProductService orderedProductService) {
         this.orderService = orderService;
-        this.productService = productService;
         this.orderedProductService = orderedProductService;
     }
 
@@ -36,23 +34,22 @@ public class OrderController {
     }
 
     @PostMapping("/create/")
-    public void createOrder(@RequestBody @Valid Order order) {
+    public void createOrder(@Valid @RequestBody OrderBuilder orderBuilder) {
+        Order order = orderBuilder.build();
 
-//
-//        List<Product> products = order.getProducts().stream()
-//                .map(product -> productService.findByProductCode(product.getProductCode()))
-//                .collect(Collectors.toList());
-//
-//
-//        products.forEach(productService::create);
         orderService.createOrder(order);
-
     }
 
     @PutMapping("/create/{orderId}/")
     public ResponseEntity<Order> addProducts(@Valid @PathVariable("orderId") Integer orderId,
-                                             @Valid @RequestBody OrderedProduct orderedProduct) {
+                                             @Valid @RequestBody OrderedProductBuilder orderedProductBuilder) {
+        OrderedProduct orderedProduct = orderedProductBuilder.build();
 
+        try {
+            orderService.getOrderById(orderId);
+        } catch (NoSuchElementException e) {
+            throw new ApiRequestException("Order not found");
+        }
         orderedProductService.assignProductToOrder(orderId, orderedProduct);
 
         return new ResponseEntity<>(HttpStatus.OK);

@@ -1,5 +1,7 @@
 package com.company.name.googledrivemanager.controller;
 
+import static com.company.name.googledrivemanager.database.model.Product.ProductBuilder;
+
 import com.company.name.googledrivemanager.database.model.Product;
 import com.company.name.googledrivemanager.database.service.ProductService;
 import org.springframework.http.HttpStatus;
@@ -29,7 +31,8 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public void addProduct(@RequestBody @Valid Product product) {
+    public void addProduct(@RequestBody @Valid ProductBuilder productBuilder) {
+        Product product = productBuilder.build();
         productService.create(product);
     }
 
