@@ -1,0 +1,44 @@
+###
+// -*- Request will add test product into database -*- //
+###
+POST http://localhost:8007/product/add
+Content-Type: application/json
+Accept: application/json
+
+{
+  "productCode": 1112,
+  "name": "TestProduct",
+  "productDistributor": "TestDistributor",
+  "productQuantity": 30
+}
+
+###
+// -*- Request will create test order with 2018-05-05 date -*- //
+###
+POST http://localhost:8007/order/create/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": 5,
+  "destination": "TestDestination",
+  "paymentStatus": true,
+  "date": "2018-05-05"
+}
+
+###
+// -*- Request will add previosly added product into order with ID == 5 -*- //
+###
+PUT http://localhost:8007/order/create/5/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "productCode": 1112,
+  "productQuantity": 2
+}
+
+###
+// -*- Request will generate excel file for all orders created in 2018-05-05 -*- //
+###
+POST http://localhost:8007/excel/generate/2018-05-05
