@@ -2,4 +2,4 @@ This application helps organize warehouse daily work. It store information about
 
 —
 
-Application use technology: Google Drive API, Apache POI, PostgreSQL, SpringBoot, REST API
+Application use technology: SpringBoot, Google Drive API, Apache POI, PostgreSQL, REST API
