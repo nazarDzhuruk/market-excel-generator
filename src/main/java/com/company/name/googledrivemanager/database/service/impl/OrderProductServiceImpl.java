@@ -9,8 +9,6 @@ import com.company.name.googledrivemanager.database.repository.ProductRepository
 import com.company.name.googledrivemanager.database.service.OrderedProductService;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
-
 @Service
 public class OrderProductServiceImpl implements OrderedProductService {
     private final OrderedProductRepository orderedProductRepository;
@@ -26,10 +24,16 @@ public class OrderProductServiceImpl implements OrderedProductService {
 
     @Override
     public void assignProductToOrder(int orderId, OrderedProduct orderedProduct) {
+
         Order order = orderRepository.findById(orderId).orElse(null);
-        orderedProduct.getOrders().add(order);
-        changeQuantityOfStoredItem(orderedProduct);
-        orderedProductRepository.save(orderedProduct);
+
+        if (order != null) {
+            orderedProduct.getOrders().add(order);
+            changeQuantityOfStoredItem(orderedProduct);
+            orderedProductRepository.save(orderedProduct);
+        }else {
+            throw new NullPointerException("Order not found");
+        }
     }
 
     @Override
@@ -38,8 +42,11 @@ public class OrderProductServiceImpl implements OrderedProductService {
     }
 
     private void changeQuantityOfStoredItem(OrderedProduct orderedItem) {
-        Product product = productRepository.findById(orderedItem.getProductCode()).orElse(null);
-        if (product != null) {
+
+        Product product = productRepository.findById(orderedItem.getProductCode())
+                .orElseThrow(() -> new NullPointerException("Product not found"));
+
+        if (product != null && product.getProductQuantity() > orderedItem.getProductQuantity()) {
             int newQuantity = product.getProductQuantity() - orderedItem.getProductQuantity();
             product.setProductQuantity(newQuantity);
             productRepository.save(product);

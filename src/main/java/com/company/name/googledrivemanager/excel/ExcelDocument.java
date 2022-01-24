@@ -1,7 +1,7 @@
 package com.company.name.googledrivemanager.excel;
 
 import com.company.name.googledrivemanager.database.model.Order;
-import com.company.name.googledrivemanager.database.model.Product;
+import com.company.name.googledrivemanager.database.model.OrderedProduct;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -28,27 +28,27 @@ public class ExcelDocument {
         return INSTANCE;
     }
 
-    public void createDocument(String documentName, List<Order> data) {
-//        XSSFWorkbook wb = new XSSFWorkbook();
-//        XSSFSheet sheet = wb.createSheet(String.valueOf(LocalDate.now()));
-//        int rowNum = 0;
-//        for (Order order : data) {
-//            for (Product product : order.getProducts()) {
-//                Row row = sheet.createRow(rowNum++);
-//                createCell(order, product, row);
-//            }
-//        }
-//        try (OutputStream fileOut = new FileOutputStream(PATH + SLASH + documentName + EXTENSION)) {
-//
-//            wb.write(fileOut);
-//            wb.close();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+    public static void createDocument(String documentName, List<Order> data) {
+        XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet sheet = wb.createSheet(String.valueOf(LocalDate.now()));
+        int rowNum = 0;
+        for (Order order : data) {
+            for (OrderedProduct product : order.getProducts()) {
+                Row row = sheet.createRow(rowNum++);
+                createCell(order, product, row);
+            }
+        }
+        try (OutputStream fileOut = new FileOutputStream(PATH + SLASH + documentName + EXTENSION)) {
+
+            wb.write(fileOut);
+            wb.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private static void createCell(Order order, Product product, Row row) {
+    public static void createCell(Order order, OrderedProduct product, Row row) {
         Cell idCell = row.createCell(0);
         Cell dateCell = row.createCell(1);
         Cell destinationCell = row.createCell(2);
@@ -61,4 +61,5 @@ public class ExcelDocument {
         productCell.setCellValue(product.getProductCode());
         productQuantityCell.setCellValue(product.getProductQuantity());
     }
+
 }
