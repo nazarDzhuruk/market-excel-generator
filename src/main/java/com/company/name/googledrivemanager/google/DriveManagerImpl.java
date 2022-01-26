@@ -72,25 +72,13 @@ public class DriveManagerImpl implements DriveManager {
                 .allMatch(b -> b.equals(true));
     }
 
-    private String googleFolderId(String folderName) {
-        String googleFolderId = null;
-        try {
-            googleFolderId = DriveDataManager.getGoogleRootFoldersByName(folderName)
-                    .stream().map(File::getId).toArray()[0].toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return googleFolderId;
+    private String googleFolderId(String folderName) throws IOException {
+        return DriveDataManager.getGoogleRootFoldersByName(folderName)
+                .stream().map(File::getId).toArray()[0].toString();
     }
 
-    private String googleFolderName(String folderName) {
-        String googleFolderName = null;
-        try {
-            googleFolderName = DriveDataManager.getGoogleRootFoldersByName(folderName)
-                    .stream().map(File::getName).toArray()[0].toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return googleFolderName;
+    private String googleFolderName(String folderName) throws IOException {
+        return DriveDataManager.getGoogleRootFoldersByName(folderName)
+                .stream().map(File::getName).toArray()[0].toString();
     }
 }

@@ -11,7 +11,7 @@ import java.util.Objects;
 
 @Component
 public class ExcelManagerImpl implements ExcelManager {
-    private static final String PATH = "src/main/sheets";
+    private static final String PATH = "/Users/nazardzh/Downloads/sheets";
     private final ExcelDocument excelDocument = ExcelDocument.getInstance();
     private final OrderService orderService;
 

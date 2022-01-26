@@ -10,7 +10,7 @@ import com.google.api.services.drive.model.File;
 public class DriveDataBuilder {
     private static final String EXCEL_MIME_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     private static final String FOLDER_MIME_TYPE = "application/vnd.google-apps.folder";
-    private static final String SHEETS_FOLDER = "src/main/sheets/";
+    private static final String SHEETS_FOLDER = "/Users/nazardzh/Downloads/sheets/";
 
     public static void createGoogleFolder(String folderIdParent, String folderName) {
         File fileMetadata = new File();

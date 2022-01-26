@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class ExcelDocument {
-    private static final String PATH = "src/main/sheets";
+    private static final String PATH = "/Users/nazardzh/Downloads/sheets";
     private static final String EXTENSION = ".xlsx";
     private static final String SLASH = "/";
     private static ExcelDocument INSTANCE;
@@ -48,7 +48,7 @@ public class ExcelDocument {
         }
     }
 
-    public static void createCell(Order order, OrderedProduct product, Row row) {
+    private static void createCell(Order order, OrderedProduct product, Row row) {
         Cell idCell = row.createCell(0);
         Cell dateCell = row.createCell(1);
         Cell destinationCell = row.createCell(2);

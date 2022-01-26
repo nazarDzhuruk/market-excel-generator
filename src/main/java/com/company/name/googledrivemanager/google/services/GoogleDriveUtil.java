@@ -34,6 +34,8 @@ public class GoogleDriveUtil {
     private static final String CLIENT_SECRET_FILE_NAME = "client_secret.json";
 
     private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE);
+
+    private GoogleDriveUtil(){}
     
     private static HttpTransport getHttpTransport() throws GeneralSecurityException, IOException {
         return GoogleNetHttpTransport.newTrustedTransport();
